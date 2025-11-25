@@ -43,6 +43,7 @@ class sortWithStrServiceBase(ABC):
         ...
 
 class StackServiceBase(ABC):
+
     @abstractmethod
     def push(self, x: int) -> None:
         ...
