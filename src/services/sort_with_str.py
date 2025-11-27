@@ -1,7 +1,7 @@
 from src.services.Base import sortWithStrServiceBase
 
 class SortWithStrService(sortWithStrServiceBase):
-    def bubble_sort(self, a:list[int]) -> list[int]:
+    def bubble_sort(self, a:list[int|str]) -> list[int|str]:
         i = 0
         t = True
         while t:
@@ -14,18 +14,18 @@ class SortWithStrService(sortWithStrServiceBase):
 
         return a
 
-    def quick_sort(self, a:list[int]) -> list[int]:
+    def quick_sort(self, a:list[int|str]) -> list[int|str]:
         if len(a) < 2:
-            return a  # базовый случай
+            return a
 
-        pivot = a[len(a) // 2]  # выбираем средний элемент
+        pivot = a[len(a) // 2]
         left = [x for x in a if x < pivot]
         middle = [x for x in a if x == pivot]
         right = [x for x in a if x > pivot]
 
         return self.quick_sort(left) + middle + self.quick_sort(right)
 
-    def heap_sort(self, a:list[int]) -> list[int]:
+    def heap_sort(self, a:list[int|str]) -> list[int|str]:
         n = len(a)
 
         def sift_down(start: int, heap_size: int):
@@ -48,4 +48,3 @@ class SortWithStrService(sortWithStrServiceBase):
             sift_down(0, i)
 
         return a
-

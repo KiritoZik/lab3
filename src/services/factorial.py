@@ -9,12 +9,14 @@ class FactorialService(factorialServiceBase):
     def factorial(self,
                   number: int,
                   recursive: bool) -> int:
-        if recursive:
-            return self.factorial_recursive(number)
+
+        if number < 0:
+            raise ValueError("Факториал не определен для отрицательных чисел")
         else:
-            result = 1
-            for i in range(1, number + 1):
-                result *= i
-            return result
-
-
+            if recursive:
+                return self.factorial_recursive(number)
+            else:
+                result = 1
+                for i in range(1, number + 1):
+                    result *= i
+                return result

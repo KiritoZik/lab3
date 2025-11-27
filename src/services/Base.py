@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 
-
 class factorialServiceBase(ABC):
 
     @abstractmethod
@@ -31,29 +30,29 @@ class sortWithoutStrServiceBase(ABC):
 
 class sortWithStrServiceBase(ABC):
     @abstractmethod
-    def bubble_sort(self, a:list[int]) -> list[int]:
+    def bubble_sort(self, a:list[int|str]) -> list[int|str]:
         ...
 
     @abstractmethod
-    def quick_sort(self, a:list[int]) -> list[int]:
+    def quick_sort(self, a:list[int|str]) -> list[int|str]:
         ...
 
     @abstractmethod
-    def heap_sort(self, a:list[int]) -> list[int]:
+    def heap_sort(self, a:list[int|str]) -> list[int|str]:
         ...
 
 class StackServiceBase(ABC):
 
     @abstractmethod
-    def push(self, x: int) -> None:
+    def push(self, x: int|str|float) -> None:
         ...
 
     @abstractmethod
-    def pop(self) -> int:
+    def pop(self) -> int|str|float:
         ...
 
     @abstractmethod
-    def peek(self) -> int:
+    def peek(self) -> int|str|float:
         ...
 
     @abstractmethod
@@ -65,20 +64,20 @@ class StackServiceBase(ABC):
         ...
 
     @abstractmethod
-    def min(self) -> int:
+    def min(self) -> int|str|float:
         ...
 
 class QueueServiceBase(ABC):
     @abstractmethod
-    def enqueue(self, x: int) -> None:
+    def enqueue(self, x: int|str|float) -> None:
         ...
 
     @abstractmethod
-    def dequeue(self) -> int:
+    def dequeue(self) -> int|str|float:
         ...
 
     @abstractmethod
-    def front(self) -> int:
+    def front(self) -> int|str|float:
         ...
 
     @abstractmethod

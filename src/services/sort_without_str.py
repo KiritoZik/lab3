@@ -2,6 +2,8 @@ from src.services.Base import sortWithoutStrServiceBase
 
 class SortWithoutStrService(sortWithoutStrServiceBase):
     def counting_sort(self, a:list[int]) -> list[int]:
+        if not a:
+            return []
         result: list[int] = [0] * len(a)
         k = max(a) + 1
         lst: list[int] = [0] * k
@@ -23,22 +25,22 @@ class SortWithoutStrService(sortWithoutStrServiceBase):
     def radix_sort(self, a:list[int]) -> list[int]:
 
         def digit(num: int, raz: int) -> int:
-            num = str(num)
-            if len(num) < raz:
-                return 0
-            return int(num[-raz])
+            return (num // (10 ** (raz - 1))) % 10
+
+        if len(a) < 2:
+            return a
+        base = 10
         pre_result: list[int] = [0] * len(a)
         max_raz: int = len( str(abs(max(a))) )
         for i in range(1, max_raz + 1 ):
-            k: int = 10
-            lst: list[int] = [0] * k
+            lst: list[int] = [0] * base
 
             for j in range(len(a)):
                 d: int = digit(a[j], i)
                 lst[d] += 1
 
             count: int = 0
-            for j in range(k):
+            for j in range(base):
                 tmp: int = lst[j]
                 lst[j] = count
                 count += tmp
@@ -51,25 +53,20 @@ class SortWithoutStrService(sortWithoutStrServiceBase):
         return a
 
     def bucket_sort(self, a:list[float], buckets: int|None) -> list[float]:
+        if len(a) < 2:
+            return a
         maxi = max(a)
         mini = min(a)
-        if len(a) < 2 or mini == maxi:
+        if mini == maxi:
             return a
         num_buckets: int = buckets if buckets is not None else len(a)
         bucket: list[list[float]] = [[] for _ in range(num_buckets)]
-        min_buckets: list[float|None] = [None] * num_buckets
-        max_buckets: list[float|None] = [None] * num_buckets
         rang = maxi - mini
         for i in range(len(a)):
             index = int((a[i] - mini) * num_buckets / rang)
             if index == num_buckets:
                 index -= 1
             bucket[index].append(a[i])
-            if min_buckets[index] is None or a[i] < min_buckets[index]:
-                min_buckets[index] = a[i]
-            if max_buckets[index] is None or a[i] > max_buckets[index]:
-                max_buckets[index] = a[i]
-
 
         for i in range(num_buckets):
             if len(bucket[i]) > 1:
@@ -80,4 +77,3 @@ class SortWithoutStrService(sortWithoutStrServiceBase):
             result.extend(bucket[i])
 
         return result
-
