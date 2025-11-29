@@ -41,6 +41,20 @@ class TestStackService:
         stack.pop()
         assert stack.min() == 2
 
+    def test_min_duplicates(self):
+        stack = StackService()
+        stack.push(5)
+        stack.push(2)
+        stack.push(8)
+        stack.push(2)
+        assert stack.min() == 2
+        stack.pop()
+        assert stack.min() == 2
+        stack.pop()
+        assert stack.min() == 2
+        stack.pop()
+        assert stack.min() == 5
+
     def test_empty_stack_errors(self):
         stack = StackService()
         with pytest.raises(IndexError):
@@ -80,6 +94,16 @@ class TestQueueService:
         with pytest.raises(IndexError):
             queue.front()
 
+    def test_queue_len(self):
+        queue = QueueService()
+        assert len(queue) == 0
+        queue.enqueue(1)
+        assert len(queue) == 1
+        queue.enqueue(2)
+        assert len(queue) == 2
+        queue.dequeue()
+        assert len(queue) == 1
+
 
 class TestFactorialService:
     def test_factorial_iterative(self):
@@ -100,6 +124,8 @@ class TestFactorialService:
         service = FactorialService()
         with pytest.raises(ValueError):
             service.factorial(-1, False)
+        with pytest.raises(ValueError):
+            service.factorial(-1, True)
 
 
 class TestFibonacciService:
@@ -123,6 +149,8 @@ class TestFibonacciService:
         service = FibonacciService()
         with pytest.raises(ValueError):
             service.fibonacci(-1, False)
+        with pytest.raises(ValueError):
+            service.fibonacci(-1, True)
 
 
 class TestSortWithStrService:
@@ -188,3 +216,24 @@ class TestSortWithoutStrService:
         assert result == [0.32, 0.33, 0.37, 0.42, 0.47, 0.51, 0.52]
         assert service.bucket_sort([0.5], None) == [0.5]
         assert service.bucket_sort([], None) == []
+
+    def test_bucket_sort_negative(self):
+        service = SortWithoutStrService()
+        result = service.bucket_sort([-0.5, -0.3, -0.1, 0.2, 0.4], None)
+        assert result == [-0.5, -0.3, -0.1, 0.2, 0.4]
+        result2 = service.bucket_sort([-1.5, -0.5, 0.5, 1.5], None)
+        assert result2 == [-1.5, -0.5, 0.5, 1.5]
+
+    def test_counting_sort_negative(self):
+        service = SortWithoutStrService()
+        with pytest.raises(ValueError):
+            service.counting_sort([3, -1, 4, 1, 5])
+        with pytest.raises(ValueError):
+            service.counting_sort([-1])
+
+    def test_radix_sort_negative(self):
+        service = SortWithoutStrService()
+        with pytest.raises(ValueError):
+            service.radix_sort([170, -45, 75, 90, 2, 802])
+        with pytest.raises(ValueError):
+            service.radix_sort([-1])

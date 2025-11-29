@@ -1,7 +1,8 @@
 from src.services.Base import StackServiceBase
 
+
 class StackService(StackServiceBase):
-    def  __init__(self):
+    def __init__(self):
         self._lst = []
         self._mini = []
 
@@ -26,7 +27,7 @@ class StackService(StackServiceBase):
         return len(self._lst) == 0
 
     def __len__(self) -> int:
-        return len(self._lst)-1
+        return len(self._lst)
 
     def min(self) -> int|str|float:
         if self.is_empty():

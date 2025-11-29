@@ -4,6 +4,8 @@ class SortWithoutStrService(sortWithoutStrServiceBase):
     def counting_sort(self, a:list[int]) -> list[int]:
         if not a:
             return []
+        if any(x < 0 for x in a):
+            raise ValueError("Сортировка подсчетом работает только с неотрицательными числами")
         result: list[int] = [0] * len(a)
         k = max(a) + 1
         lst: list[int] = [0] * k
@@ -29,6 +31,8 @@ class SortWithoutStrService(sortWithoutStrServiceBase):
 
         if len(a) < 2:
             return a
+        if any(x < 0 for x in a):
+            raise ValueError("Поразрядная сортировка работает только с неотрицательными числами")
         base = 10
         pre_result: list[int] = [0] * len(a)
         max_raz: int = len( str(abs(max(a))) )

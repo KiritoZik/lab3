@@ -1,7 +1,7 @@
 from src.services.Base import factorialServiceBase
 
 class FactorialService(factorialServiceBase):
-    def  factorial_recursive(self, number: int) -> int:
+    def factorial_recursive(self, number: int) -> int:
         if number == 0:
             return 1
         return number * self.factorial_recursive(number - 1)

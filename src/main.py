@@ -2,12 +2,14 @@ import typer
 from rich.console import Console
 from typer import Typer, Argument, Option
 from typing_extensions import Annotated
+from typing import cast
 from src.services.factorial import FactorialService
 from src.services.fibonacci import FibonacciService
 from src.services.sort_without_str import SortWithoutStrService
 from src.services.sort_with_str import SortWithStrService
 from src.services.stack import StackService
 from src.services.queue import QueueService
+from src.utils import get_list_type
 
 app = Typer()
 console = Console()
@@ -17,6 +19,12 @@ def factorial(
         number: Annotated[int, Argument(exists=False, readable=False, help="Вычисление факториала числа")],
         recursive: Annotated[bool, Option("--recursive", "-r", help="Активация рекурсии")] = False
 ) -> None:
+    """
+    Вычисление факториала числа.
+    :param number: Неотрицательное целое число
+    :param recursive: флаг для использования рекурсивного метода
+    :return: None
+    """
     try:
         result = FactorialService().factorial(number, recursive)
         console.print(result)
@@ -30,6 +38,12 @@ def fibonacci(
         number: Annotated[int, Argument(exists=False, readable=False, help="Вычисление числа Фибоначчи")],
         recursive: Annotated[bool, Option("--recursive", "-r", help="Активация рекурсии")] = False
 ) -> None:
+    """
+    Вычисление числа Фибоначчи.
+    :param number: Порядковый номер числа Фибоначчи
+    :param recursive: флаг для использования рекурсивного метода
+    :return: None
+    """
     try:
         result = FibonacciService().fibonacci(number, recursive)
         console.print(result)
@@ -39,44 +53,107 @@ def fibonacci(
 
 @app.command()
 def counting_sort(a: Annotated[list[int], Argument(exists=False, readable=False, help="Сортировка подсчетом")]) -> None:
-    result = SortWithoutStrService().counting_sort(a)
-    typer.echo(result)
+    """
+    Сортировка подсчетом.
+    :param a: Список неотрицательных целых чисел
+    :return: None
+    """
+    try:
+        result = SortWithoutStrService().counting_sort(a)
+        typer.echo(result)
+    except ValueError as e:
+        console.print(f"[red]{e}")
+
 
 @app.command()
 def radix_sort(a: Annotated[list[int], Argument(exists=False, readable=False, help="Поразрядная сортировка")]) -> None:
-    result = SortWithoutStrService().radix_sort(a)
-    typer.echo(result)
+    """
+    Поразрядная сортировка
+    :param a: список неотрицательных целых чисел
+    :return: None
+    """
+    try:
+        result = SortWithoutStrService().radix_sort(a)
+        typer.echo(result)
+    except ValueError as e:
+        console.print(f"[red]{e}")
+
 
 @app.command()
 def bucket_sort(a: Annotated[list[float], Argument(exists=False, readable=False, help="Блочная сортировка")],
-                buckets: Annotated[int|None, Option("--buckets", "-b" ,help="Количество блоков")] = None) -> None:
+                buckets: Annotated[int | None, Option("--buckets", "-b", help="Количество блоков")] = None) -> None:
+    """
+    Блочная сортировка
+    :param a: список чисел с плавающей точкой
+    :param buckets: количество блоков
+    :return: None
+    """
     result = SortWithoutStrService().bucket_sort(a, buckets)
     typer.echo(result)
 
+
 # Со строкой
+@app.command()
+def bubble_sort(a: list[str]) -> None:
+    """
+    Сортировка пузырьком, принимающая список строк, а далее проверяет тип
+    :param a: список строк
+    :return: None
+    """
+    match get_list_type(a):
+        case 'int':
+            numbers: list[int] = [int(x) for x in a]
+            typer.echo(SortWithStrService().bubble_sort(cast(list[int | str], numbers)))
+        case 'str':
+            typer.echo(SortWithStrService().bubble_sort(cast(list[int | str], a)))
+        case 'mixed':
+            console.print("[red]Все элементы списка должны быть одного типа (int или str)")
+
 
 @app.command()
-def bubble_sort(a: list[int|str]) -> None:
-    result = SortWithStrService().bubble_sort(a)
-    typer.echo(result)
+def quick_sort(a: list[str]) -> None:
+    """
+    Быстрая сортировка, принимающая список строк, а далее проверяет тип
+    :param a: список строк
+    :return: None
+    """
+    match get_list_type(a):
+        case 'int':
+            numbers: list[int] = [int(x) for x in a]
+            typer.echo(SortWithStrService().quick_sort(cast(list[int | str], numbers)))
+        case 'str':
+            typer.echo(SortWithStrService().quick_sort(cast(list[int | str], a)))
+        case 'mixed':
+            console.print("[red]Все элементы списка должны быть одного типа (int или str)")
+
 
 @app.command()
-def quick_sort(a: list[int|str]) -> None:
-    result = SortWithStrService().quick_sort(a)
-    typer.echo(result)
-
-@app.command()
-def heap_sort(a: list[int|str]) -> None:
-    result  = SortWithStrService().heap_sort(a)
-    typer.echo(result)
+def heap_sort(a: list[str]) -> None:
+    """
+    Пирамидальная сортировка, принимающая список строк, а далее проверяет тип
+    :param a: список строк
+    :return: None
+    """
+    match get_list_type(a):
+        case 'int':
+            numbers: list[int] = [int(x) for x in a]
+            typer.echo(SortWithStrService().heap_sort(cast(list[int | str], numbers)))
+        case 'str':
+            typer.echo(SortWithStrService().heap_sort(cast(list[int | str], a)))
+        case 'mixed':
+            console.print("[red]Все элементы списка должны быть одного типа (int или str)")
 
 @app.command()
 def stack() -> None:
+    """
+    Интерактивная работа со стеком
+    :return: None
+    """
     stack_service = StackService()
     stack_type = None
 
     typer.echo("Интерактивная работа со стеком")
-    while (cmd := typer.prompt("Введите команду для стека", default="quit").lower()) != "quit":
+    while (cmd := typer.prompt("Введите команду для стека", default="qui3232t").lower()) != "quit":
         match cmd:
             case 'info':
                 typer.echo("push - добавить элемент\n pop - получить и удалить верхний элемент\n peek - получить верхний элемент\n"
@@ -134,6 +211,10 @@ def stack() -> None:
 
 @app.command()
 def queue() -> None:
+    """
+    Интерактивная работа с очередью
+    :return: None
+    """
     queue_service = QueueService()
     queue_type = None
 
